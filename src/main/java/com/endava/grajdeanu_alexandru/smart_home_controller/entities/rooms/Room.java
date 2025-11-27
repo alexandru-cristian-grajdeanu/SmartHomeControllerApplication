@@ -1,14 +1,25 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.entities.rooms;
 
-import lombok.Data;
 
-@Data
+import lombok.Getter;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
 public class Room {
-    private String name;
-    private double area;
+    private final String idRoom;
+    private final Set<String> deviceIds = new HashSet<>();
 
-    public Room(){
-
+    public Room(String idRoom) {
+        this.idRoom = idRoom;
     }
 
+    public void addDeviceId(String deviceId) {
+        deviceIds.add(deviceId);
+    }
+
+    public void removeDeviceId(String deviceId) {
+        deviceIds.remove(deviceId);
+    }
 }

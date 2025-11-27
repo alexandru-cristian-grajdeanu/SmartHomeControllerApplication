@@ -1,19 +1,39 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 public class AlarmSystem extends Device {
-    private String name;
-
+    private boolean isArmed;
     @Value("${spring.application.password}")
     private String password;
 
     public AlarmSystem() {
-        super();
+        super("ALARM_SYSTEM");
+        this.isArmed = false;
+    }
+
+    public void armSystem(){
+        this.isArmed = true;
+    }
+
+    public void disarmSystem(){
+        this.isArmed = false;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void deactivate(String password) {
+        if (this.password.equals(password)) {
+            this.isArmed = false;
+        } else {
+            throw new IllegalArgumentException("Invalid password");
+        }
     }
 
 }

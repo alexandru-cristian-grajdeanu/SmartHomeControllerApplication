@@ -1,12 +1,24 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-public class Device {
+@Getter
+@ToString
+public abstract class Device {
+    private String id;
     private boolean isActive;
 
-    public Device(){
+    protected Device(String id) {
+        this.isActive = false;
+        this.id = id;
+    }
+
+    public void turnOn() {
+        this.isActive = true;
+    }
+
+    public void turnOff() {
         this.isActive = false;
     }
 }
