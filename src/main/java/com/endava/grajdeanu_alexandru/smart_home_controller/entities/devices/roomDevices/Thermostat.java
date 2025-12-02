@@ -10,8 +10,8 @@ import lombok.Setter;
 public class Thermostat extends RoomDevice {
     private double temperature;
 
-    public Thermostat(Room room, double temperature) {
-        super(room.getIdRoom(), "THERMOSTAT_" + room.getIdRoom().toUpperCase());
-        this.temperature = temperature;
+    public Thermostat(String roomId) {
+        super(roomId, "THERMOSTAT_" + roomId.toUpperCase());
+        this.temperature = 20.0;
     }
 }

@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class LightBulb extends RoomDevice {
     private final int intensity;
-    public LightBulb(int intensity, Room room) {
-        super(room.getIdRoom(), "LIGHT_BULB_" + room.getIdRoom().toUpperCase());
+    public LightBulb(int intensity, String roomId) {
+        super(roomId, "LIGHT_BULB_" + roomId.toUpperCase());
         this.intensity = intensity;
     }
 }

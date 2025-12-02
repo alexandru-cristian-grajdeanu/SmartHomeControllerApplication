@@ -19,12 +19,16 @@ public class SmartHomeService {
         this.roomRepository = roomRepository;
     }
 
-    public void armAlarmSystem(String password) {
+    public boolean armAlarmSystem(String password) {
         Device alarmDevice = deviceRepository.findById("ALARM_DEVICE").orElseThrow(() -> new RuntimeException("Alarm device not found"));
         if (alarmDevice instanceof AlarmSystem alarmSystem){
             if (alarmSystem.getPassword().equals(password)) {
+                if (alarmSystem.isArmed()) {
+                    throw new RuntimeException("Alarm system is already armed");
+                }
                 alarmSystem.armSystem();
                 deviceRepository.save(alarmSystem);
+                return true;
             } else {
                 throw new RuntimeException("Incorrect password");
             }
@@ -33,12 +37,16 @@ public class SmartHomeService {
         }
     }
 
-    public void disarmAlarmSystem(String password) {
+    public boolean disarmAlarmSystem(String password) {
         Device alarmDevice = deviceRepository.findById("ALARM_DEVICE").orElseThrow(() -> new RuntimeException("Alarm device not found"));
         if (alarmDevice instanceof AlarmSystem alarmSystem){
             if (alarmSystem.getPassword().equals(password)) {
+                if (!alarmSystem.isArmed()) {
+                    throw new RuntimeException("Alarm system is already disarmed");
+                }
                 alarmSystem.disarmSystem();
                 deviceRepository.save(alarmSystem);
+                return true;
             } else {
                 throw new RuntimeException("Incorrect password");
             }
@@ -47,22 +55,26 @@ public class SmartHomeService {
         }
     }
 
-    public void turnOffDevicesInRoom(String roomId) {
+    public boolean turnOffDevicesInRoom(String roomId) {
         var room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
             device.turnOff();
             deviceRepository.save(device);
+
         });
+        return true;
     }
 
-    public void turnOnDevicesInRoom(String roomId) {
+    public boolean turnOnDevicesInRoom(String roomId) {
         var room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
             device.turnOn();
             deviceRepository.save(device);
+
         });
+        return true;
     }
 
     public void changeAlarmPassword(String oldPassword, String newPassword) {
@@ -101,6 +113,20 @@ public class SmartHomeService {
             lightbulbDevice.turnOff();
             deviceRepository.save(lightbulbDevice);
         }else{
+            throw new RuntimeException("Device is not a LightBulb");
+        }
+        roomRepository.save(room);
+    }
+
+    public void openLightsInRoom(String roomId) {
+        var room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
+        var lightbulbId = room.getDeviceIds().stream().filter(id -> id.startsWith("LIGHTBULB")).findFirst().orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
+        var lightbulb = deviceRepository.findById(lightbulbId).orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
+        if(lightbulb instanceof LightBulb lightbulbDevice) {
+            lightbulbDevice.turnOn();
+            deviceRepository.save(lightbulbDevice);
+        }
+        else{
             throw new RuntimeException("Device is not a LightBulb");
         }
         roomRepository.save(room);

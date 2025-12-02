@@ -10,7 +10,7 @@ public abstract class Device {
     private boolean isActive;
 
     protected Device(String id) {
-        this.isActive = false;
+        this.isActive = true;
         this.id = id;
     }
 
