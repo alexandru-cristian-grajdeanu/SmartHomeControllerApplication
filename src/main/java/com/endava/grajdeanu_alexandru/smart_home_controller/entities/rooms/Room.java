@@ -14,7 +14,7 @@ public class Room {
     private final Set<String> deviceIds = new HashSet<>();
 
     public Room(String idRoom) {
-        this.idRoom = idRoom;
+        this.idRoom = idRoom.toUpperCase();
     }
 
     public void addDeviceId(String deviceId) {

@@ -28,10 +28,4 @@ public class AlarmSystem extends Device {
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
-
-    public void deactivate(String password) {
-        if (this.password.equals(password)) {
-            this.isArmed = false;
-        }
-    }
 }

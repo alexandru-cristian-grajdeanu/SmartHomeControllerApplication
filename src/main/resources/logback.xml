@@ -1,5 +1,5 @@
 <configuration>
-    <!-- evaluated once at startup -->
+    <!-- Timestamp evaluated once at startup = per run -->
     <timestamp key="RUN_TIME" datePattern="yyyy-MM-dd_HH-mm-ss" />
 
     <property name="LOG_PATH" value="logs" />
@@ -8,6 +8,7 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_FILE}</file>
         <append>false</append>
+
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
         </encoder>

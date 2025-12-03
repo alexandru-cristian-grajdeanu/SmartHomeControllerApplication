@@ -1,0 +1,17 @@
+2025-12-03 13:11:17 INFO  [main] c.e.g.s.SmartHomeControllerApplication - Starting SmartHomeControllerApplication using Java 25 with PID 20060 (C:\Endava\EndevLocal\Project java\School_of_java\smart-home-controller\target\classes started by agrajdeanu in C:\Endava\EndevLocal\Project java\School_of_java\smart-home-controller)
+2025-12-03 13:11:17 INFO  [main] c.e.g.s.SmartHomeControllerApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-03 13:11:18 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-12-03 13:11:18 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-03 13:11:19 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-03 13:11:19 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14]
+2025-12-03 13:11:19 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 1171 ms
+2025-12-03 13:11:19 INFO  [main] o.s.v.b.OptionalValidatorFactoryBean - Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-12-03 13:11:19 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-03 13:11:19 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-12-03 13:11:19 INFO  [main] c.e.g.s.SmartHomeControllerApplication - Started SmartHomeControllerApplication in 1.969 seconds (process running for 3.29)
+2025-12-03 13:11:20 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-03 13:11:20 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-03 13:11:20 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-12-03 13:11:21 INFO  [http-nio-8080-exec-10] o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 201 ms
+2025-12-03 13:11:53 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-03 13:11:53 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete

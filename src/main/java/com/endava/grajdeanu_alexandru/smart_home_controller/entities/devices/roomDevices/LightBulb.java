@@ -6,8 +6,18 @@ import lombok.Getter;
 @Getter
 public class LightBulb extends RoomDevice {
     private final int intensity;
-    public LightBulb(int intensity, String roomId) {
-        super(roomId, "LIGHT_BULB_" + roomId.toUpperCase());
+    private boolean isOn;
+    public LightBulb(int intensity, String roomId, String name) {
+        super(roomId, "LIGHT_BULB_" + name.toUpperCase() + "_" + roomId.toUpperCase());
         this.intensity = intensity;
+        this.isOn = false;
+    }
+
+    public void switchOn() {
+        this.isOn = true;
+    }
+
+    public void switchOff() {
+        this.isOn = false;
     }
 }

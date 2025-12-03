@@ -1,10 +1,13 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices;
 
+import lombok.Getter;
+
+@Getter
 public class SmartAssistant extends Device {
     private final String nameOfService;
 
     public SmartAssistant(String nameOfService) {
-        super("SMART_ASSISTANT_" + nameOfService.toUpperCase());
+        super("SMART_ASSISTANT");
         this.nameOfService = nameOfService;
     }
 

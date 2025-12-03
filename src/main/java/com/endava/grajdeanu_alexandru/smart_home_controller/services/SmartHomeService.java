@@ -61,7 +61,6 @@ public class SmartHomeService {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
             device.turnOff();
             deviceRepository.save(device);
-
         });
         return true;
     }
@@ -97,8 +96,13 @@ public class SmartHomeService {
                 .orElseThrow(() -> new RuntimeException("Thermostat not found in room"));
         var thermostat = deviceRepository.findById(thermostatId).orElseThrow(() -> new RuntimeException("Thermostat device not found"));
         if (thermostat instanceof Thermostat thermostatDevice) {
-            thermostatDevice.setTemperature(newTemperature);
-            deviceRepository.save(thermostatDevice);
+            if (thermostatDevice.isActive())
+            {
+                thermostatDevice.setTemperature(newTemperature);
+                deviceRepository.save(thermostatDevice);
+            }else{
+                throw new RuntimeException("Thermostat is not active");
+            }
         }else{
             throw new RuntimeException("Device is not a Thermostat");
         }
@@ -110,7 +114,7 @@ public class SmartHomeService {
         var lightbulbId = room.getDeviceIds().stream().filter(id -> id.startsWith("LIGHTBULB")).findFirst().orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
         var lightbulb = deviceRepository.findById(lightbulbId).orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
         if(lightbulb instanceof LightBulb lightbulbDevice) {
-            lightbulbDevice.turnOff();
+            lightbulbDevice.switchOff();
             deviceRepository.save(lightbulbDevice);
         }else{
             throw new RuntimeException("Device is not a LightBulb");
@@ -123,7 +127,7 @@ public class SmartHomeService {
         var lightbulbId = room.getDeviceIds().stream().filter(id -> id.startsWith("LIGHTBULB")).findFirst().orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
         var lightbulb = deviceRepository.findById(lightbulbId).orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
         if(lightbulb instanceof LightBulb lightbulbDevice) {
-            lightbulbDevice.turnOn();
+            lightbulbDevice.switchOn();
             deviceRepository.save(lightbulbDevice);
         }
         else{
@@ -139,8 +143,4 @@ public class SmartHomeService {
             smartAssistant.helloService();
         }
     }
-
-
-
-
 }
