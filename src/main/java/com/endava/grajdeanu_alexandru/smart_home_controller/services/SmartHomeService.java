@@ -66,7 +66,7 @@ public class SmartHomeService {
     }
 
     public RoomDevicesStatusDTO turnOffDevicesInRoom(RoomCallingDTO roomCallingDTO) {
-        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        var room = roomRepository.findById(roomCallingDTO.getRoomId().toUpperCase()).orElseThrow(() -> new RuntimeException("Room not found"));
         List<DeviceStatusDTO> deviceStatusDTOs = new ArrayList<>();
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
@@ -84,7 +84,7 @@ public class SmartHomeService {
     }
 
     public RoomDevicesStatusDTO turnOnDevicesInRoom(RoomCallingDTO roomCallingDTO) {
-        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        var room = roomRepository.findById(roomCallingDTO.getRoomId().toUpperCase()).orElseThrow(() -> new RuntimeException("Room not found"));
         List<DeviceStatusDTO> deviceStatusDTOs = new ArrayList<>();
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
@@ -120,7 +120,7 @@ public class SmartHomeService {
     }
 
     public ThermostatChangingResponseDTO changeTemperatureInRoom(ThermostatCallingDTO thermostatCallingDTO) {
-        var room = roomRepository.findById(thermostatCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        var room = roomRepository.findById(thermostatCallingDTO.getRoomId().toUpperCase()).orElseThrow(() -> new RuntimeException("Room not found"));
         var thermostatId = room.getDeviceIds().stream().filter(id -> id.startsWith("THERMOSTAT_")).findFirst()
                 .orElseThrow(() -> new RuntimeException("Thermostat not found in room"));
         var thermostat = deviceRepository.findById(thermostatId).orElseThrow(() -> new RuntimeException("Thermostat device not found"));
@@ -144,7 +144,7 @@ public class SmartHomeService {
     }
 
     public LightBulbsStatusDTO closeLightsInRoom(RoomCallingDTO roomCallingDTO) {
-        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        var room = roomRepository.findById(roomCallingDTO.getRoomId().toUpperCase()).orElseThrow(() -> new RuntimeException("Room not found"));
         List<LightBulbStatusDTO> lightBulbStatusDTOs = new ArrayList<>();
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
@@ -165,7 +165,7 @@ public class SmartHomeService {
     }
 
     public LightBulbsStatusDTO openLightsInRoom(RoomCallingDTO roomCallingDTO) {
-        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        var room = roomRepository.findById(roomCallingDTO.getRoomId().toUpperCase()).orElseThrow(() -> new RuntimeException("Room not found"));
         List<LightBulbStatusDTO> lightBulbStatusDTOs = new ArrayList<>();
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));

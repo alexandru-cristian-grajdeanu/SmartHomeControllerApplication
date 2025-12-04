@@ -81,7 +81,7 @@ public class DeviceService {
     }
 
     public void removeDevice(String deviceId) {
-        Room room = roomRepository.findById(deviceId).orElse(null);
+        Room room = roomRepository.findById(deviceId.toUpperCase()).orElse(null);
         if (room != null) {
             room.getDeviceIds().remove(deviceId);
             roomRepository.save(room);

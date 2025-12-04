@@ -38,7 +38,7 @@ public class RoomService {
     }
 
     public RoomOutputDTO getRoom(String roomId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room = roomRepository.findById(roomId.toUpperCase()).orElseThrow(() -> new RuntimeException("Room not found"));
         RoomOutputDTO roomOutputDTO = new RoomOutputDTO();
         roomOutputDTO.setRoomName(room.getIdRoom());
         List<DeviceResponseDTO> deviceResponseDTOs = new ArrayList<>();
