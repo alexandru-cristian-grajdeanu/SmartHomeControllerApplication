@@ -33,7 +33,7 @@ public class SmartHomeService {
                 alarmSystem.armSystem();
                 deviceRepository.save(alarmSystem);
                 AlarmStatusDTO alarmStatusDTO = new AlarmStatusDTO();
-                alarmStatusDTO.setDeviceId(alarmDevice.getId());
+                alarmStatusDTO.setDeviceId(alarmSystem.getId());
                 alarmStatusDTO.setArmed(alarmSystem.isArmed());
                 return alarmStatusDTO;
             } else {
@@ -54,7 +54,7 @@ public class SmartHomeService {
                 alarmSystem.disarmSystem();
                 deviceRepository.save(alarmSystem);
                 AlarmStatusDTO alarmStatusDTO = new AlarmStatusDTO();
-                alarmStatusDTO.setDeviceId(alarmDevice.getId());
+                alarmStatusDTO.setDeviceId(alarmSystem.getId());
                 alarmStatusDTO.setArmed(alarmSystem.isArmed());
                 return alarmStatusDTO;
             } else {
@@ -65,8 +65,8 @@ public class SmartHomeService {
         }
     }
 
-    public RoomDevicesStatusDTO turnOffDevicesInRoom(ConnectionDevicesRoomDTO connectionDevicesRoomDTO) {
-        var room = roomRepository.findById(connectionDevicesRoomDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+    public RoomDevicesStatusDTO turnOffDevicesInRoom(RoomCallingDTO roomCallingDTO) {
+        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
         List<DeviceStatusDTO> deviceStatusDTOs = new ArrayList<>();
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
@@ -83,8 +83,8 @@ public class SmartHomeService {
         return roomDevicesStatusDTO;
     }
 
-    public RoomDevicesStatusDTO turnOnDevicesInRoom(ConnectionDevicesRoomDTO connectionDevicesRoomDTO) {
-        var room = roomRepository.findById(connectionDevicesRoomDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+    public RoomDevicesStatusDTO turnOnDevicesInRoom(RoomCallingDTO roomCallingDTO) {
+        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
         List<DeviceStatusDTO> deviceStatusDTOs = new ArrayList<>();
         room.getDeviceIds().forEach(deviceId -> {
             var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
@@ -101,12 +101,16 @@ public class SmartHomeService {
         return roomDevicesStatusDTO;
     }
 
-    public void changeAlarmPassword(String oldPassword, String newPassword) {
+    public ResponseChangePasswordDTO changeAlarmPassword(ChangePasswordDTO changePasswordDTO) {
         Device alarmDevice = deviceRepository.findById("ALARM_DEVICE").orElseThrow(() -> new RuntimeException("Alarm device not found"));
         if (alarmDevice instanceof AlarmSystem alarmSystem){
-            if (alarmSystem.getPassword().equals(oldPassword)) {
-                alarmSystem.changePassword(newPassword);
+            if (alarmSystem.getPassword().equals(changePasswordDTO.getOldPassword())) {
+                alarmSystem.changePassword(changePasswordDTO.getNewPassword());
                 deviceRepository.save(alarmSystem);
+                ResponseChangePasswordDTO responseChangePasswordDTO = new ResponseChangePasswordDTO();
+                responseChangePasswordDTO.setDeviceId(alarmDevice.getId());
+                responseChangePasswordDTO.setPasswordChanged(true);
+                return responseChangePasswordDTO;
             } else {
                 throw new RuntimeException("Incorrect old password");
             }
@@ -115,50 +119,70 @@ public class SmartHomeService {
         }
     }
 
-    public void changeTemperatureInRoom(String roomId, double newTemperature) {
-        var room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
+    public ThermostatChangingResponseDTO changeTemperatureInRoom(ThermostatCallingDTO thermostatCallingDTO) {
+        var room = roomRepository.findById(thermostatCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
         var thermostatId = room.getDeviceIds().stream().filter(id -> id.startsWith("THERMOSTAT_")).findFirst()
                 .orElseThrow(() -> new RuntimeException("Thermostat not found in room"));
         var thermostat = deviceRepository.findById(thermostatId).orElseThrow(() -> new RuntimeException("Thermostat device not found"));
         if (thermostat instanceof Thermostat thermostatDevice) {
             if (thermostatDevice.isActive())
             {
-                thermostatDevice.setTemperature(newTemperature);
+                thermostatDevice.setTemperature(thermostatCallingDTO.getNewTemperature());
                 deviceRepository.save(thermostatDevice);
+                ThermostatChangingResponseDTO thermostatResponseDTO = new ThermostatChangingResponseDTO();
+                thermostatResponseDTO.setDeviceId(thermostatDevice.getId());
+                thermostatResponseDTO.setRoomId(thermostatDevice.getRoomId());
+                thermostatResponseDTO.setNewTemperature(thermostatDevice.getTemperature());
+                return thermostatResponseDTO;
             }else{
                 throw new RuntimeException("Thermostat is not active");
             }
         }else{
             throw new RuntimeException("Device is not a Thermostat");
         }
-        roomRepository.save(room);
+
     }
 
-    public void closeLightsInRoom(String roomId) {
-        var room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
-        var lightbulbId = room.getDeviceIds().stream().filter(id -> id.startsWith("LIGHTBULB")).findFirst().orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
-        var lightbulb = deviceRepository.findById(lightbulbId).orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
-        if(lightbulb instanceof LightBulb lightbulbDevice) {
-            lightbulbDevice.switchOff();
-            deviceRepository.save(lightbulbDevice);
-        }else{
-            throw new RuntimeException("Device is not a LightBulb");
+    public LightBulbsStatusDTO closeLightsInRoom(RoomCallingDTO roomCallingDTO) {
+        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        List<LightBulbStatusDTO> lightBulbStatusDTOs = new ArrayList<>();
+        room.getDeviceIds().forEach(deviceId -> {
+            var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
+            if(device instanceof LightBulb lightBulbDevice){
+                lightBulbDevice.switchOff();
+                deviceRepository.save(lightBulbDevice);
+                LightBulbStatusDTO lightBulbStatusDTO = new LightBulbStatusDTO();
+                lightBulbStatusDTO.setDeviceId(lightBulbDevice.getId());
+                lightBulbStatusDTO.setOn(lightBulbDevice.isOn());
+                lightBulbStatusDTOs.add(lightBulbStatusDTO);
+            }
         }
-        roomRepository.save(room);
+        );
+        LightBulbsStatusDTO lightBulbsStatusDTO = new LightBulbsStatusDTO();
+        lightBulbsStatusDTO.setRoomId(room.getIdRoom());
+        lightBulbsStatusDTO.setDevices(lightBulbStatusDTOs);
+        return lightBulbsStatusDTO;
     }
 
-    public void openLightsInRoom(String roomId) {
-        var room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
-        var lightbulbId = room.getDeviceIds().stream().filter(id -> id.startsWith("LIGHT_BULB")).findFirst().orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
-        var lightbulb = deviceRepository.findById(lightbulbId).orElseThrow(() -> new RuntimeException("Lightbulb device not found"));
-        if(lightbulb instanceof LightBulb lightbulbDevice) {
-            lightbulbDevice.switchOn();
-            deviceRepository.save(lightbulbDevice);
-        }
-        else{
-            throw new RuntimeException("Device is not a LightBulb");
-        }
-        roomRepository.save(room);
+    public LightBulbsStatusDTO openLightsInRoom(RoomCallingDTO roomCallingDTO) {
+        var room = roomRepository.findById(roomCallingDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
+        List<LightBulbStatusDTO> lightBulbStatusDTOs = new ArrayList<>();
+        room.getDeviceIds().forEach(deviceId -> {
+            var device = deviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found"));
+            if(device instanceof LightBulb lightBulbDevice) {
+                lightBulbDevice.switchOn();
+                deviceRepository.save(lightBulbDevice);
+                LightBulbStatusDTO lightBulbStatusDTO = new LightBulbStatusDTO();
+                lightBulbStatusDTO.setDeviceId(lightBulbDevice.getId());
+                lightBulbStatusDTO.setOn(lightBulbDevice.isOn());
+                lightBulbStatusDTOs.add(lightBulbStatusDTO);
+            }
+        });
+        LightBulbsStatusDTO lightBulbsStatusDTO = new LightBulbsStatusDTO();
+        lightBulbsStatusDTO.setRoomId(room.getIdRoom());
+        lightBulbsStatusDTO.setDevices(lightBulbStatusDTOs);
+        return lightBulbsStatusDTO;
+
     }
 
     public MessageFromSmartAssistantDTO callAssistant() {

@@ -69,6 +69,9 @@ public class DeviceService {
                 if (deviceRepository.findById("ALARM_DEVICE").isPresent()) {
                     throw new RuntimeException("Alarm system already exists");
                 }
+                if (alarmSystemDTO.getPassword() == null || alarmSystemDTO.getPassword().isEmpty()) {
+                    throw new RuntimeException("Password cannot be null or empty for Alarm System");
+                }
                 createdDevice = new AlarmSystem(alarmSystemDTO.getPassword());
                 deviceRepository.save(createdDevice);
                 return new DeviceResponseDTO(createdDevice.getId(), createdDevice.getClass().getName());

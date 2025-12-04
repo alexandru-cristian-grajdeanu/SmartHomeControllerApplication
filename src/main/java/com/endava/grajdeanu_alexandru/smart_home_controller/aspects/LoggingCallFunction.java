@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class LoggingCallFunction {
     private final Logger logger = LoggerFactory.getLogger(LoggingCallFunction.class);
 
-    @Before("execution(* com.endava.grajdeanu_alexandru.smart_home_controller.services.SmartHomeService.*(..))")
+    @Before("execution(* com.endava.grajdeanu_alexandru.smart_home_controller.services..*(..))")
     public void logBeforeMethodCall(JoinPoint joinPoint) {
         logger.info(
                 "Calling method: {}",
@@ -25,14 +25,27 @@ public class LoggingCallFunction {
         );
     }
 
+    @Around("execution(* com.endava.grajdeanu_alexandru.smart_home_controller.services..*(..))")
+    public Object logMethodExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long startTime = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long endTime = System.currentTimeMillis();
+        logger.info(
+                "Method {} executed in {} ms",
+                joinPoint.getSignature().getName(),
+                (endTime - startTime)
+        );
+        return result;
+    }
+
 
     @AfterThrowing(
-            pointcut = "execution(* com.endava.grajdeanu_alexandru.smart_home_controller.services.SmartHomeService.*(..))",
+            pointcut = "execution(* com.endava.grajdeanu_alexandru.smart_home_controller.services..*(..))",
             throwing = "ex"
     )
     public void logException(JoinPoint joinPoint, Throwable ex) {
-        logger.error("Exception in method {}",
+        logger.error("Exception in method {} ->  {}",
                 joinPoint.getSignature().toShortString(),
-                ex);
+                ex.getMessage());
     }
 }

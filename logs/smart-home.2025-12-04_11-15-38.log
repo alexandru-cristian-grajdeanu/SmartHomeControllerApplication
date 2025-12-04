@@ -1,21 +1,21 @@
-2025-12-03 11:47:44 INFO  [main] c.e.g.s.SmartHomeControllerApplication - Starting SmartHomeControllerApplication using Java 25 with PID 27244 (C:\Endava\EndevLocal\Project java\School_of_java\smart-home-controller\target\classes started by agrajdeanu in C:\Endava\EndevLocal\Project java\School_of_java\smart-home-controller)
-2025-12-03 11:47:44 INFO  [main] c.e.g.s.SmartHomeControllerApplication - No active profile set, falling back to 1 default profile: "default"
-2025-12-03 11:47:45 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2025-12-03 11:47:45 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2025-12-03 11:47:45 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-12-03 11:47:45 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14]
-2025-12-03 11:47:45 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 724 ms
-2025-12-03 11:47:45 INFO  [main] o.s.v.b.OptionalValidatorFactoryBean - Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
-2025-12-03 11:47:45 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2025-12-03 11:47:45 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2025-12-03 11:47:45 INFO  [main] c.e.g.s.SmartHomeControllerApplication - Started SmartHomeControllerApplication in 1.44 seconds (process running for 2.033)
-2025-12-03 11:47:46 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-03 11:47:46 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-12-03 11:47:46 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2025-12-03 11:47:46 ERROR [http-nio-8080-exec-1] o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.ClassCastException: class com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.DeviceDTO cannot be cast to class com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.SmartHomeAssistantDTO (com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.DeviceDTO and com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.SmartHomeAssistantDTO are in unnamed module of loader 'app')] with root cause
-java.lang.ClassCastException: class com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.DeviceDTO cannot be cast to class com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.SmartHomeAssistantDTO (com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.DeviceDTO and com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.SmartHomeAssistantDTO are in unnamed module of loader 'app')
-	at com.endava.grajdeanu_alexandru.smart_home_controller.services.DeviceService.addDevice(DeviceService.java:32)
-	at com.endava.grajdeanu_alexandru.smart_home_controller.controllers.DeviceController.createDevice(DeviceController.java:26)
+2025-12-04 11:15:38 INFO  [main] c.e.g.s.SmartHomeControllerApplication - Starting SmartHomeControllerApplication using Java 25 with PID 28616 (C:\Endava\EndevLocal\Project java\School_of_java\smart-home-controller\target\classes started by agrajdeanu in C:\Endava\EndevLocal\Project java\School_of_java\smart-home-controller)
+2025-12-04 11:15:38 INFO  [main] c.e.g.s.SmartHomeControllerApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-04 11:15:39 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-12-04 11:15:39 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-04 11:15:39 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-04 11:15:39 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14]
+2025-12-04 11:15:39 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 753 ms
+2025-12-04 11:15:39 INFO  [main] o.s.v.b.OptionalValidatorFactoryBean - Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-12-04 11:15:39 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-04 11:15:39 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-12-04 11:15:39 INFO  [main] c.e.g.s.SmartHomeControllerApplication - Started SmartHomeControllerApplication in 1.443 seconds (process running for 2.102)
+2025-12-04 11:15:42 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-04 11:15:42 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-04 11:15:42 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-12-04 11:15:42 ERROR [http-nio-8080-exec-2] o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Password cannot be null or empty for Alarm System] with root cause
+java.lang.RuntimeException: Password cannot be null or empty for Alarm System
+	at com.endava.grajdeanu_alexandru.smart_home_controller.services.DeviceService.addDevice(DeviceService.java:73)
+	at com.endava.grajdeanu_alexandru.smart_home_controller.controllers.DeviceController.createDevice(DeviceController.java:25)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258)
@@ -59,5 +59,5 @@ java.lang.ClassCastException: class com.endava.grajdeanu_alexandru.smart_home_co
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
-2025-12-03 11:52:57 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2025-12-03 11:52:58 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-12-04 11:19:06 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-04 11:19:06 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete

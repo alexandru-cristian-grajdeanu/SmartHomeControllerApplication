@@ -3,11 +3,9 @@ package com.endava.grajdeanu_alexandru.smart_home_controller.dtos.smartHomeDTOs;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
-public class RoomDevicesStatusDTO {
-    private String roomName;
-    private List<DeviceStatusDTO> devices;
+public class LightBulbStatusDTO {
+    private String deviceId;
+    private boolean isOn;
 }
