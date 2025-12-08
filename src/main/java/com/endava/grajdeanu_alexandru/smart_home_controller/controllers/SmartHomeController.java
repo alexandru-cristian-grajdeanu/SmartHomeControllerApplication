@@ -26,13 +26,13 @@ public class SmartHomeController {
         this.smartHomeService = smartHomeService;
     }
 
-    @GetMapping("/call-assistant")
+    @GetMapping("/assistant")
     public ResponseEntity<MessageFromSmartAssistantDTO> callAssistant() throws NoDeviceFoundException, UnsupportedDeviceException {
         var response = smartHomeService.callAssistant();
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/activate-alarm-system")
+    @PostMapping("/alarm/activate")
     public ResponseEntity<AlarmStatusDTO> activateAlarmSystem(
             @RequestBody AlarmSystemCallingDTO alarmSystemCallingDTO
     ) throws NoDeviceFoundException, IncorrectPasswordException, UnsupportedDeviceException, AlreadyArmedAlarmException {
@@ -41,7 +41,7 @@ public class SmartHomeController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/deactivate-alarm-system")
+    @PostMapping("/alarm/deactivate")
     public ResponseEntity<AlarmStatusDTO> deactivateAlarmSystem(
             @RequestBody AlarmSystemCallingDTO alarmSystemCallingDTO
     ) throws NoDeviceFoundException, IncorrectPasswordException, UnsupportedDeviceException, AlreadyDisarmedAlarmException {
@@ -49,37 +49,37 @@ public class SmartHomeController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/change-password")
+    @PostMapping("/alarm/password/change")
     public ResponseEntity<ResponseChangePasswordDTO> changeAlarmSystemPassword(@RequestBody ChangePasswordDTO changePasswordDTO) throws NoDeviceFoundException, IncorrectPasswordException, UnsupportedDeviceException {
         var response = smartHomeService.changeAlarmPassword(changePasswordDTO);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/disconnect-devices-room")
+    @PostMapping("/rooms/devices/disconnect")
     public ResponseEntity<RoomDevicesStatusDTO> disconnectAllDevicesInRoom(@RequestBody RoomCallingDTO roomNameDTO) throws NoRoomFoundException, NoDeviceFoundException {
         var response = smartHomeService.turnOffDevicesInRoom(roomNameDTO);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/connect-devices-room")
+    @PostMapping("/rooms/devices/connect")
     public ResponseEntity<RoomDevicesStatusDTO> connectAllDevicesInRoom(@RequestBody RoomCallingDTO roomNameDTO) throws NoRoomFoundException, NoDeviceFoundException {
         var response = smartHomeService.turnOnDevicesInRoom(roomNameDTO);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/close-the-lights-room")
+    @PostMapping("/room/lights/close")
     public ResponseEntity<LightBulbsStatusDTO> turnOffLightsInRoom(@RequestBody RoomCallingDTO roomNameDTO) throws NoRoomFoundException, NoDeviceFoundException {
         var response = smartHomeService.closeLightsInRoom(roomNameDTO);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/open-the-lights-room")
+    @PostMapping("/room/lights/open")
     public ResponseEntity<LightBulbsStatusDTO> turnOnLightsInRoom(@RequestBody RoomCallingDTO roomNameDTO) throws NoRoomFoundException, NoDeviceFoundException {
         var response = smartHomeService.openLightsInRoom(roomNameDTO);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/set-temperature-room")
+    @PostMapping("/room/thermostat")
     public ResponseEntity<ThermostatChangingResponseDTO> setTemperatureInRoom(@RequestBody ThermostatCallingDTO thermostatCallingDTO) throws NoRoomFoundException, NoDeviceFoundException, UnsupportedDeviceException, DisconnectedDeviceException {
         var response = smartHomeService.changeTemperatureInRoom(thermostatCallingDTO);
         return ResponseEntity.ok(response);

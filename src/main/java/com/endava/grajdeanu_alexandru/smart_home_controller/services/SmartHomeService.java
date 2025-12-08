@@ -111,7 +111,7 @@ public class SmartHomeService {
         var room = roomRepository.findById(thermostatCallingDTO.getRoomId().toUpperCase()).orElseThrow(() -> new NoRoomFoundException("Room not found"));
         var thermostatId = room.getDeviceIds().stream().filter(id -> id.startsWith("THERMOSTAT_")).findFirst()
                 .orElseThrow(() -> new NoDeviceFoundException("Thermostat not found in room"));
-        var thermostat = deviceRepository.findById(thermostatId).orElseThrow(() -> new RuntimeException("Thermostat device not found"));
+        var thermostat = deviceRepository.findById(thermostatId).orElseThrow(() -> new NoDeviceFoundException("Thermostat device not found"));
         if (thermostat instanceof Thermostat thermostatDevice) {
             if (thermostatDevice.isActive())
             {

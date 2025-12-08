@@ -2,5 +2,6 @@ package com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.security
 
 public class IncorrectPasswordException extends Throwable {
     public IncorrectPasswordException(String incorrectPassword) {
+        super(incorrectPassword);
     }
 }
