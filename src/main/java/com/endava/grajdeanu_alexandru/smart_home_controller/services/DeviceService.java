@@ -1,13 +1,26 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.services;
 
-import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.inputDTOs.*;
-import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.outputDTOs.*;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.alarms.AlarmSystemDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.alarms.AlarmSystemResponseDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.devices.DeviceDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.devices.DeviceResponseDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.lightbulbs.LightBulbDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.lightbulbs.LightBulbResponseDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.smart_assistant.SmartAssistantResponseDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.smart_assistant.SmartHomeAssistantDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.thermostats.ThermostatDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.thermostats.ThermostatResponseDTO;
 import com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices.AlarmSystem;
 import com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices.Device;
 import com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices.SmartAssistant;
 import com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices.roomDevices.LightBulb;
 import com.endava.grajdeanu_alexandru.smart_home_controller.entities.devices.roomDevices.Thermostat;
 import com.endava.grajdeanu_alexandru.smart_home_controller.entities.rooms.Room;
+import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.devices_exceptions.DeviceAlreadyExistsException;
+import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.devices_exceptions.NoDeviceFoundException;
+import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.devices_exceptions.UnsupportedDeviceException;
+import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.general_exceptions.InvalidValuesException;
+import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.room_exceptions.NoRoomFoundException;
 import com.endava.grajdeanu_alexandru.smart_home_controller.repositories.device_repositories.DeviceRepository;
 import com.endava.grajdeanu_alexandru.smart_home_controller.repositories.room_repositories.RoomRepository;
 import org.springframework.stereotype.Service;
@@ -29,7 +42,7 @@ public class DeviceService {
         return devices.stream().map(device -> new DeviceResponseDTO(device.getId(), device.getClass().getSimpleName())).toList();
     }
 
-    public DeviceResponseDTO addDevice(DeviceDTO device) {
+    public DeviceResponseDTO addDevice(DeviceDTO device) throws NoRoomFoundException, DeviceAlreadyExistsException, InvalidValuesException, UnsupportedDeviceException {
         Device createdDevice;
         switch (device) {
             case SmartHomeAssistantDTO smartHomeAssistantDTO -> {
@@ -39,7 +52,7 @@ public class DeviceService {
             }
             case LightBulbDTO lightBulbDTO -> {
                 if (lightBulbDTO.getRoomId() == null || roomRepository.findById(lightBulbDTO.getRoomId()).isEmpty()) {
-                    throw new RuntimeException("Room not found for LightBulb");
+                    throw new NoRoomFoundException("Room not found for LightBulb");
                 }
                 createdDevice = new LightBulb(lightBulbDTO.getIntensity(), lightBulbDTO.getRoomId(), lightBulbDTO.getNameOfLightBulb());
                 Room room = roomRepository.findById(lightBulbDTO.getRoomId()).get();
@@ -50,13 +63,13 @@ public class DeviceService {
             }
             case ThermostatDTO thermostatDTO -> {
                 if (thermostatDTO.getRoomId() == null || roomRepository.findById(thermostatDTO.getRoomId()).isEmpty()) {
-                    throw new RuntimeException("Room not found for Thermostat");
+                    throw new NoRoomFoundException("Room not found for Thermostat");
                 }
                 if (deviceRepository.findAll().stream().filter(d -> d instanceof Thermostat).anyMatch(d -> {
                     Thermostat t = (Thermostat) d;
                     return t.getRoomId().equals(thermostatDTO.getRoomId());
                 })) {
-                    throw new RuntimeException("Thermostat already exists in this room");
+                    throw new DeviceAlreadyExistsException("Thermostat already exists in this room");
                 }
                 Room room = roomRepository.findById(thermostatDTO.getRoomId()).get();
                 createdDevice = new Thermostat(thermostatDTO.getRoomId());
@@ -67,60 +80,46 @@ public class DeviceService {
             }
             case AlarmSystemDTO alarmSystemDTO -> {
                 if (deviceRepository.findById("ALARM_DEVICE").isPresent()) {
-                    throw new RuntimeException("Alarm system already exists");
+                    throw new DeviceAlreadyExistsException("Alarm system already exists");
                 }
                 if (alarmSystemDTO.getPassword() == null || alarmSystemDTO.getPassword().isEmpty()) {
-                    throw new RuntimeException("Password cannot be null or empty for Alarm System");
+                    throw new InvalidValuesException("Password cannot be null or empty for Alarm System");
                 }
                 createdDevice = new AlarmSystem(alarmSystemDTO.getPassword());
                 deviceRepository.save(createdDevice);
                 return new DeviceResponseDTO(createdDevice.getId(), createdDevice.getClass().getName());
             }
-            case null, default -> throw new RuntimeException("Unsupported device type");
+            case null, default -> throw new UnsupportedDeviceException("Unsupported device type");
         }
     }
 
-    public void removeDevice(String deviceId) {
+    public void removeDevice(String deviceId) throws NoDeviceFoundException {
         Room room = roomRepository.findById(deviceId.toUpperCase()).orElse(null);
         if (room != null) {
             room.getDeviceIds().remove(deviceId);
             roomRepository.save(room);
         }
-        Device device = deviceRepository.findById(deviceId.toUpperCase()).orElseThrow(() -> new RuntimeException("Device not found"));
+        Device device = deviceRepository.findById(deviceId.toUpperCase()).orElseThrow(() -> new NoDeviceFoundException("Device not found"));
         deviceRepository.deleteById(device);
 
     }
 
-    public DeviceResponseDTO getDevice(String deviceId) {
-        Device device = deviceRepository.findById(deviceId.toUpperCase()).orElseThrow(() -> new RuntimeException("Device not found"));
-        if (device instanceof SmartAssistant smartAssistant) {
-            SmartAssistantResponseDTO responseDTO = new SmartAssistantResponseDTO();
-            responseDTO.setId(smartAssistant.getId());
-            responseDTO.setType(smartAssistant.getClass().getSimpleName());
-            responseDTO.setNameOfAssistant(smartAssistant.getNameOfService());
-            return responseDTO;
-        } else if (device instanceof LightBulb lightBulb) {
-            LightBulbResponseDTO responseDTO = new LightBulbResponseDTO();
-            responseDTO.setId(lightBulb.getId());
-            responseDTO.setType(lightBulb.getClass().getSimpleName());
-            responseDTO.setIntensity(lightBulb.getIntensity());
-            responseDTO.setRoomId(lightBulb.getRoomId());
-            responseDTO.setOn(lightBulb.isOn());
-            return responseDTO;
-        } else if (device instanceof Thermostat thermostat) {
-            ThermostatResponseDTO responseDTO = new ThermostatResponseDTO();
-            responseDTO.setId(thermostat.getId());
-            responseDTO.setType(thermostat.getClass().getSimpleName());
-            responseDTO.setCurrentTemperature(thermostat.getTemperature());
-            responseDTO.setRoomId(thermostat.getRoomId());
-            return responseDTO;
-        } else if (device instanceof AlarmSystem alarmSystem) {
-            AlarmSystemResponseDTO responseDTO = new AlarmSystemResponseDTO();
-            responseDTO.setId(alarmSystem.getId());
-            responseDTO.setType(alarmSystem.getClass().getSimpleName());
-            responseDTO.setArmed(alarmSystem.isArmed());
-            return responseDTO;
+    public DeviceResponseDTO getDevice(String deviceId) throws NoDeviceFoundException, UnsupportedDeviceException {
+        Device device = deviceRepository.findById(deviceId.toUpperCase()).orElseThrow(() -> new NoDeviceFoundException("Device not found"));
+        switch (device) {
+            case SmartAssistant smartAssistant -> {
+                return new SmartAssistantResponseDTO(smartAssistant.getId(), smartAssistant.getClass().getSimpleName(), smartAssistant.getNameOfService());
+            }
+            case LightBulb lightBulb -> {
+                return new LightBulbResponseDTO(lightBulb.getId(), lightBulb.getClass().getSimpleName(), lightBulb.getIntensity(), lightBulb.isOn(), lightBulb.getRoomId());
+            }
+            case Thermostat thermostat -> {
+                return new ThermostatResponseDTO(thermostat.getId(), thermostat.getClass().getSimpleName(), thermostat.getTemperature(), thermostat.getRoomId());
+            }
+            case AlarmSystem alarmSystem -> {
+                return new AlarmSystemResponseDTO(alarmSystem.getId(), alarmSystem.getClass().getSimpleName(), alarmSystem.isArmed());
+            }
+            case null, default -> throw new UnsupportedDeviceException("Unsupported device type");
         }
-        throw new RuntimeException("Unsupported device type");
     }
 }

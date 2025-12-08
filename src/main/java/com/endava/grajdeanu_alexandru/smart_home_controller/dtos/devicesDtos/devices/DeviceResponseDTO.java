@@ -1,5 +1,8 @@
-package com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.outputDTOs;
+package com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.devices;
 
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.lightbulbs.LightBulbResponseDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.smart_assistant.SmartAssistantResponseDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.devicesDtos.thermostats.ThermostatResponseDTO;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
