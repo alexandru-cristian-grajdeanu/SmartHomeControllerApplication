@@ -8,6 +8,7 @@ import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.room_exce
 import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.room_exceptions.RoomAlreadyExistsException;
 import com.endava.grajdeanu_alexandru.smart_home_controller.services.DeviceService;
 import com.endava.grajdeanu_alexandru.smart_home_controller.services.RoomService;
+import com.endava.grajdeanu_alexandru.smart_home_controller.session.SessionRequestTracker;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,30 +18,34 @@ import java.util.List;
 @RequestMapping("/api/v1/")
 public class RoomController {
     private final RoomService roomService;
-    private final DeviceService deviceService;
+    private final SessionRequestTracker sessionRequestTracker;
 
-    public RoomController(RoomService roomService, DeviceService deviceService) {
+    public RoomController(RoomService roomService, SessionRequestTracker sessionRequestTracker) {
+        this.sessionRequestTracker = sessionRequestTracker;
         this.roomService = roomService;
-        this.deviceService = deviceService;
     }
 
     @PostMapping("/rooms")
     public ResponseEntity<RoomOutputDTO> createRoom(@RequestBody RoomInputDTO roomInputDTO) throws InvalidValuesException, RoomAlreadyExistsException {
+        sessionRequestTracker.incrementRequestCount();
         return ResponseEntity.ok(roomService.addRoom(roomInputDTO));
     }
 
     @GetMapping("/rooms/{roomId}")
     public ResponseEntity<RoomOutputDTO> getRoomById(@PathVariable String roomId) throws NoRoomFoundException, NoDeviceFoundException {
+        sessionRequestTracker.incrementRequestCount();
         return ResponseEntity.ok(roomService.getRoom(roomId));
     }
 
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomOutputDTO>> getAllRooms() throws NoDeviceFoundException {
+        sessionRequestTracker.incrementRequestCount();
         return ResponseEntity.ok(roomService.getAllRooms());
     }
 
     @DeleteMapping("/rooms/{roomId}" )
     public ResponseEntity<Void> deleteRoom(@PathVariable String roomId) throws NoRoomFoundException, NoDeviceFoundException {
+        sessionRequestTracker.incrementRequestCount();
         roomService.removeRoom(roomId);
         return ResponseEntity.ok().build();
     }
