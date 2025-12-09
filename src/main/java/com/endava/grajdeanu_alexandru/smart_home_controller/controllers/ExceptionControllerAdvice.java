@@ -1,6 +1,6 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.controllers;
 
-import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.ErrorDetailsDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.info_dtos.ErrorDetailsDTO;
 import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.alarm_exceptions.AlreadyArmedAlarmException;
 import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.alarm_exceptions.AlreadyDisarmedAlarmException;
 import com.endava.grajdeanu_alexandru.smart_home_controller.exceptions.devices_exceptions.DeviceAlreadyExistsException;

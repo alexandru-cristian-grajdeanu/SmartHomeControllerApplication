@@ -1,5 +1,7 @@
 package com.endava.grajdeanu_alexandru.smart_home_controller.controllers;
 
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.info_dtos.CountInfoDTO;
+import com.endava.grajdeanu_alexandru.smart_home_controller.dtos.info_dtos.InfoDTO;
 import com.endava.grajdeanu_alexandru.smart_home_controller.session.SessionRequestTracker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +26,12 @@ public class InfoController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<Map<String, String>> getInfo(){
-        return ResponseEntity.ok(Map.of(
-                "sessionId", sessionRequestTracker.getSessionId(),
-                "applicationName", nameOfApp,
-                "dataSource", dataSource));
+    public ResponseEntity<InfoDTO> getInfo(){
+        return ResponseEntity.ok(new InfoDTO(sessionRequestTracker.getSessionId(), nameOfApp, dataSource));
     }
 
     @GetMapping("/session-count")
-    public ResponseEntity<Map<String, String>> getCount(){
-        return ResponseEntity.ok(Map.of("requestCount", String.valueOf(sessionRequestTracker.getRequestCount())));
+    public ResponseEntity<CountInfoDTO> getCount(){
+        return ResponseEntity.ok(new CountInfoDTO(sessionRequestTracker.getRequestCount()));
     }
 }
